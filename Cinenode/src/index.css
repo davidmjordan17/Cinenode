@@ -1,1 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Boldonse&family=Cal+Sans&family=Comfortaa:wght@300..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Share+Tech&display=swap');
+
 @import "tailwindcss";
+
+:root{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.cinenode-header{
+  font-family: "Boldonse", sans-serif;
+  color: #fff;
+  text-shadow: black 6px 2px 1px;
+}
+
+.header-text{
+  font-family: "Cal Sans", sans-serif;
+}

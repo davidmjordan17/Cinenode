@@ -1,9 +1,10 @@
 import './index.css'
+import HomePage from './Pages/Home/HomePage'
 
 function App() {
   return (
     <>
-      <h1>Cinenode</h1>
+      <HomePage />
     </>
   )
 }
