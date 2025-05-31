@@ -1,4 +1,5 @@
 import HeaderHome from "./HeaderHome";
+import SearchSection from "./SearchSection";
 
 const HomePage = () => {
   return (
@@ -11,7 +12,8 @@ const HomePage = () => {
           <HeaderHome />
 
           {/* Seach Section */}
-
+          <SearchSection />
+        
         </div>
 
       </div>

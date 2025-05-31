@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Boldonse&family=Cal+Sans&family=Comfortaa:wght@300..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Share+Tech&display=swap');
-
 @import "tailwindcss";
 
 :root{
@@ -8,6 +7,7 @@
   box-sizing: border-box;
 }
 
+/* HeaderHome.jsx */
 .cinenode-header{
   font-family: "Boldonse", sans-serif;
   color: #fff;
@@ -16,4 +16,15 @@
 
 .header-text{
   font-family: "Cal Sans", sans-serif;
+}
+
+/* SearchSection.jsx */
+.search-header{
+  font-family: "Comfortaa", sans-serif;
+}
+
+::placeholder{
+  font-family: "Comfortaa", sans-serif;
+  color: grey;
+  opacity: 0.8;
 }
