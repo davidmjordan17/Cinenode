@@ -14,9 +14,6 @@ const HeaderHome = () => {
         <p className="text-white text-sm md:text-4xl mb-5 text-center header-text">
           Choose a starting and an ending movie, and connect them through a series of movies that share actors.
         </p>
-        <p className="text-white text-sm md:text-4xl font-bold text-center header-text">
-          Try to find the shortest path possible!
-        </p>
 
       </div>
 

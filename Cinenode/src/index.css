@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Boldonse&family=Cal+Sans&family=Comfortaa:wght@300..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Share+Tech&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
 :root{
@@ -15,16 +16,36 @@
 }
 
 .header-text{
-  font-family: "Cal Sans", sans-serif;
+  font-family: "Raleway", sans-serif;
+}
+
+input[type="text"]{
+  font-family: "Manrope", sans-serif;
+  color: #fff;
+  background-color: transparent;
+  border: none;
+  border: 1px solid #fff;
 }
 
 /* SearchSection.jsx */
 .search-header{
-  font-family: "Comfortaa", sans-serif;
+  font-family: "Raleway", sans-serif;
 }
 
 ::placeholder{
-  font-family: "Comfortaa", sans-serif;
+  font-family: "Raleway", sans-serif;
   color: grey;
   opacity: 0.8;
+}
+
+.search-results{
+  font-family: "Manrope", sans-serif;
+  color: #fff;
+}
+
+.search-btn{
+  font-family: "Raleway", sans-serif;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
 }
