@@ -1,18 +1,22 @@
 import HeaderHome from "./HeaderHome";
+import MovieChoiceSection from "./MovieChoiceSection";
 import SearchSection from "./SearchSection";
 
 const HomePage = () => {
   return (
     <>
-      <div className="flex flex-col min-h-screen bg-blue-100 items-center w-full">
+      <div className="flex flex-col min-h-screen items-center w-full home-page">
 
-        <div className="flex flex-col items-center w-full min-h-screen max-w-6xl mx-auto p-5 md:p-15 bg-gray-900 bg-opacity-90 rounded-lg shadow-lg">
+        <div className="flex flex-col items-center w-full min-h-screen max-w-6xl mx-auto p-5 md:p-15 rounded-lg">
           
           {/* Header Section */}
           <HeaderHome />
 
-          {/* Seach Section */}
-          <SearchSection />
+          <div className="flex items-center justify-center w-full max-w-6xl min-h-svh">
+          {/* Seach Section 
+          <SearchSection />*/}
+            <MovieChoiceSection />
+          </div>
         
         </div>
 
