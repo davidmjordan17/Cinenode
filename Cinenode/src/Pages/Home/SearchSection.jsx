@@ -2,8 +2,8 @@ import { useState } from "react";
 
 const SearchSection = () => {
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [results, setResults] = useState([]);
+  // const [searchTerm, setSearchTerm] = useState("");
+  // const [results, setResults] = useState([]);
 
   const handleSearch = async () => {
     if (!searchTerm) return;
