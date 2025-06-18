@@ -61,3 +61,8 @@ input[type="text"]{
 .start-movie, .end-movie{
   font-family: "Aldrich", sans-serif;
 }
+
+.start-game-btn{
+  font-family: "Raleway", sans-serif;
+  color: white;
+}
