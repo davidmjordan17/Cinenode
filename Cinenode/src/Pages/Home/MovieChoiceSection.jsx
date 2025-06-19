@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight} from 'lucide-react';
+import { Link } from "react-router-dom";
+import { useMovieContext } from '../../App';
 
 const MovieChoiceSection = () => {
   const [startMovie, setStartMovie] = useState(null);
@@ -8,6 +10,8 @@ const MovieChoiceSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
   const [page, setPage] = useState(0);
+
+  const { saveStartMovie, saveEndMovie } = useMovieContext();
 
   const handleSearch = async (e) => {
     if (e) e.preventDefault();
@@ -45,8 +49,14 @@ const MovieChoiceSection = () => {
 
   // Handler for selecting a movie
   const handleSelectMovie = (movie) => {
-    if (searchingFor === "start") setStartMovie(movie);
-    if (searchingFor === "end") setEndMovie(movie);
+    if (searchingFor === "start") {
+      setStartMovie(movie);
+      saveStartMovie(movie);
+    }
+    if (searchingFor === "end") {
+      setEndMovie(movie);
+      saveEndMovie(movie);
+    }
     setSearchingFor(null);
     setSearchTerm("");
     setResults([]);
@@ -104,10 +114,10 @@ const MovieChoiceSection = () => {
          
          {startMovie && endMovie && (
           <section className='flex w-full items-center justify-center -mb-10'>
-            <button className='bg-green-600 p-4 text-xl md:text-2xl rounded-4xl md:w-1/3 hover:cursor-pointer 
+            <Link to="/GameStarted" className='text-center bg-green-600 p-4 text-xl md:text-2xl rounded-4xl md:w-1/3 hover:cursor-pointer 
               hover:bg-green-400/80 transition-all duration-200 font-bold start-game-btn active:bg-green-300/50'>
               Start Game
-            </button>
+            </Link>
           </section>
         )}
 
