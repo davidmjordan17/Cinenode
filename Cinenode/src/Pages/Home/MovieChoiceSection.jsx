@@ -17,18 +17,8 @@ const MovieChoiceSection = () => {
     if (e) e.preventDefault();
     if (!searchTerm) return;
 
-    const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(searchTerm)}&include_adult=false&language=en-US&page=1`;
-
-    const options = {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_TMDB_BEARER_TOKEN}`
-      }
-    };
-
     try {
-      const res = await fetch(url, options);
+      const res = await fetch(`http://localhost:5000/api/search?query=${encodeURIComponent(searchTerm)}`);
       if (!res.ok) throw new Error(`Error: ${res.status}`);
       const data = await res.json();
       setResults(data.results);

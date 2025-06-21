@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useMovieContext } from '../../App';
 import { ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom'; // <-- Add this import
+import { useNavigate } from 'react-router-dom';
 
 const GameStartedPage = () => {
-  const navigate = useNavigate(); // <-- Add this line
+  const navigate = useNavigate();
   const { startMovie, endMovie, setStartMovie } = useMovieContext();
   const [currentMovie, setCurrentMovie] = useState(startMovie);
   const [cast, setCast] = useState([]);
@@ -16,23 +16,22 @@ const GameStartedPage = () => {
   const [gameFinished, setGameFinished] = useState(false);
   const moviesPerPage = 18;
 
+  // Redirect if movies are not selected
+  useEffect(() => {
+    if (!startMovie || !endMovie) {
+      navigate('/');
+    }
+  }, [startMovie, endMovie, navigate]);
+
   // Fetch cast for the current movie
   useEffect(() => {
     if (!currentMovie) return;
 
     const fetchCast = async () => {
       setLoading(true);
-      const url = `https://api.themoviedb.org/3/movie/${currentMovie.id}/credits?language=en-US`;
-      const options = {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_TMDB_BEARER_TOKEN}`
-        }
-      };
-
       try {
-        const res = await fetch(url, options);
+        const res = await fetch(`http://localhost:5000/api/movie-credits?movieId=${currentMovie.id}`);
+        if (!res.ok) throw new Error(`Error: ${res.status}`);
         const data = await res.json();
         setCast(data.cast || []);
       } catch (err) {
@@ -52,17 +51,9 @@ const GameStartedPage = () => {
 
     const fetchActorMovies = async () => {
       setLoading(true);
-      const url = `https://api.themoviedb.org/3/person/${selectedActor.id}/movie_credits?language=en-US`;
-      const options = {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_TMDB_BEARER_TOKEN}`
-        }
-      };
-
       try {
-        const res = await fetch(url, options);
+        const res = await fetch(`http://localhost:5000/api/person-movie-credits?personId=${selectedActor.id}`);
+        if (!res.ok) throw new Error(`Error: ${res.status}`);
         const data = await res.json();
         setActorMovies(data.cast || []);
       } catch (err) {
@@ -234,7 +225,15 @@ const GameStartedPage = () => {
             />
             <button
               className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-500 transition"
-              onClick={() => navigate('/')}
+              onClick={() => {
+                setStartMovie(null);
+                // If you have a setEndMovie, call it too:
+                // setEndMovie(null);
+                // Optionally clear from localStorage:
+                localStorage.removeItem('startMovie');
+                localStorage.removeItem('endMovie');
+                navigate('/');
+              }}
             >
               Play Again
             </button>
