@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useMovieContext } from '../../App';
 import { ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'; // <-- Add this import
 
 const GameStartedPage = () => {
+  const navigate = useNavigate(); // <-- Add this line
   const { startMovie, endMovie, setStartMovie } = useMovieContext();
   const [currentMovie, setCurrentMovie] = useState(startMovie);
   const [cast, setCast] = useState([]);
@@ -11,6 +13,7 @@ const GameStartedPage = () => {
   const [loading, setLoading] = useState(true);
   const [steps, setSteps] = useState(0);
   const [actorMoviesPage, setActorMoviesPage] = useState(0);
+  const [gameFinished, setGameFinished] = useState(false);
   const moviesPerPage = 18;
 
   // Fetch cast for the current movie
@@ -78,6 +81,16 @@ const GameStartedPage = () => {
     (actorMoviesPage + 1) * moviesPerPage
   );
 
+  const handleRestart = () => {
+    setCurrentMovie(startMovie);
+    setCast([]);
+    setSelectedActor(null);
+    setActorMovies([]);
+    setLoading(true);
+    setActorMoviesPage(0);
+    setGameFinished(false);
+  };
+
   if (!startMovie || !endMovie) {
     return <div>Please select both a start and end movie before starting the game.</div>;
   }
@@ -136,11 +149,15 @@ const GameStartedPage = () => {
                             key={movie.credit_id}
                             className="flex flex-col items-center justify-center hover:scale-105 hover:shadow-2xs hover:cursor-pointer duration-300 transition-all"
                             onClick={() => {
-                              setSteps(steps + 1);
-                              setCurrentMovie(movie);
-                              setSelectedActor(null);
-                              setActorMovies([]);
-                              setActorMoviesPage(0);
+                              if (movie.id === endMovie.id) {
+                                setGameFinished(true);
+                              } else {
+                                setSteps(steps + 1);
+                                setCurrentMovie(movie);
+                                setSelectedActor(null);
+                                setActorMovies([]);
+                                setActorMoviesPage(0);
+                              }
                             }}
                           >
                             {movie.poster_path && (
@@ -205,6 +222,32 @@ const GameStartedPage = () => {
             </div>
           </div>
         </div>
+
+        {gameFinished ? (
+          <div className="flex flex-col items-center justify-center min-h-[300px]">
+            <h2 className="text-4xl font-bold text-green-600 mb-4">🎉 You Win! 🎉</h2>
+            <p className="text-xl text-white mb-2">You reached the end movie in {steps + 1} steps!</p>
+            <img
+              src={`https://image.tmdb.org/t/p/w500${endMovie.poster_path}`}
+              alt={endMovie.title}
+              className="w-[200px] rounded-lg shadow-lg"
+            />
+            <button
+              className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-500 transition"
+              onClick={() => navigate('/')}
+            >
+              Play Again
+            </button>
+          </div>
+        ) : (
+          // Stuck? Restart Button
+          <button
+            className="mb-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-400 transition font-bold self-center"
+            onClick={handleRestart}
+          >
+            Stuck? Restart from Beginning
+          </button>
+        )}
       </div>
     </>
   );
