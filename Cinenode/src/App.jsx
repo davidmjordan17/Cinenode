@@ -29,7 +29,14 @@ export const MovieProvider = ({ children }) => {
   };
 
   return (
-    <MovieContext.Provider value={{ startMovie, saveStartMovie, endMovie, saveEndMovie }}>
+    <MovieContext.Provider value={{
+      startMovie,
+      setStartMovie,
+      saveStartMovie,
+      endMovie,
+      setEndMovie,
+      saveEndMovie
+    }}>
       {children}
     </MovieContext.Provider>
   );

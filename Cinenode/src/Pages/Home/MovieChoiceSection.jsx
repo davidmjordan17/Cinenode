@@ -55,7 +55,7 @@ const MovieChoiceSection = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-2 p-5 md:p-20 bg-white/30 rounded">
+      <div className="flex flex-col gap-2 p-5 md:p-20 bg-white/15 rounded">
         <div className="flex gap-8 md:gap-15 items-center">
           {/* Start Movie */}
           <div className="flex flex-col text-center">
