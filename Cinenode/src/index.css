@@ -68,7 +68,7 @@ input[type="text"]{
   color: white;
 }
 
-.header-above-cast{
+.header-above-cast, .back-to-cast, .giveup, .next-page-btn{
   font-family: "Staatliches", sans-serif;
   font-weight: 400;
 }

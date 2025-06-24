@@ -14,6 +14,8 @@ const GameStartedPage = () => {
   const [steps, setSteps] = useState(0);
   const [actorMoviesPage, setActorMoviesPage] = useState(0);
   const [gameFinished, setGameFinished] = useState(false);
+  const [gaveUp, setGaveUp] = useState(false); // <-- Add this line
+  const [actorMovieSearch, setActorMovieSearch] = useState('');
   const moviesPerPage = 12;
 
   // Redirect if movies are not selected
@@ -67,7 +69,11 @@ const GameStartedPage = () => {
     fetchActorMovies();
   }, [selectedActor]);
 
-  const paginatedActorMovies = actorMovies.slice(
+  const filteredActorMovies = actorMovies.filter(movie =>
+    movie.title.toLowerCase().includes(actorMovieSearch.toLowerCase())
+  );
+
+  const paginatedActorMovies = filteredActorMovies.slice(
     actorMoviesPage * moviesPerPage,
     (actorMoviesPage + 1) * moviesPerPage
   );
@@ -80,6 +86,7 @@ const GameStartedPage = () => {
     setLoading(true);
     setActorMoviesPage(0);
     setGameFinished(false);
+    setSteps(steps + 1)
   };
 
   if (!startMovie || !endMovie) {
@@ -89,8 +96,8 @@ const GameStartedPage = () => {
   return (
     <>
       <div className='flex flex-col min-h-screen items-center justify-center w-full home-page p-5 sm:px-20 md:px-30 xl:px-50'>
-        <div className='w-full max-w-6xl flex flex-col items-center justify-center md:mt-30'>
-          <h1 className='text-5xl md:-mt-50 lg:-mt-55 md:text-6xl lg:text-9xl text-white'>{steps}</h1>
+        <div className='w-full max-w-6xl flex flex-col items-center justify-center md:mt-40'>
+          <h1 className='text-5xl md:-mt-58 lg:-mt-50 md:text-6xl lg:text-9xl text-white'>{steps}</h1>
         </div>
 
         <div className='flex items-center justify-between w-full max-w-6xl p-10 mt-50 md:mt-60'>
@@ -123,17 +130,22 @@ const GameStartedPage = () => {
                 <div>Loading...</div>
               ) : selectedActor ? (
                 <>
-                  <button
-                    className="mb-4 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-300 transition"
-                    onClick={() => {
-                      setSelectedActor(null);
-                      setActorMovies([]);
-                    }}
-                  >
-                    &larr; Back to Cast
-                  </button>
                   {actorMovies.length > 0 ? (
                     <>
+                      {selectedActor && (
+                        <div className="flex justify-center mb-2">
+                          <input
+                            type="text"
+                            value={actorMovieSearch}
+                            onChange={e => {
+                              setActorMovieSearch(e.target.value);
+                              setActorMoviesPage(0); // Reset to first page on new search
+                            }}
+                            placeholder="Search this actor's movies..."
+                            className="p-2 rounded border border-gray-300 w-full max-w-xs md:max-w-md lg:max-w-lg"
+                          />
+                        </div>
+                      )}
                       <ul className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 md:gap-2">
                         {paginatedActorMovies.map((movie) => (
                           <li
@@ -163,18 +175,27 @@ const GameStartedPage = () => {
                         ))}
                       </ul>
                       {actorMovies.length > moviesPerPage && (
-                        <div className="flex justify-between mt-4">
+                        <div className="flex justify-between items-center mt-4 gap-2">
                           <button
-                            className={`px-4 py-2 rounded bg-gray-300 text-black font-semibold transition-all duration-200 ${actorMoviesPage === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-400'}`}
+                            className={`px-4 py-2 rounded bg-gray-300 text-black font-semibold transition-all duration-200 next-page-btn ${actorMoviesPage === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-400'}`}
                             onClick={() => setActorMoviesPage(actorMoviesPage - 1)}
                             disabled={actorMoviesPage === 0}
                           >
                             Previous
                           </button>
                           <button
-                            className={`px-4 py-2 rounded bg-gray-300 text-black font-semibold transition-all duration-200 ${(actorMoviesPage + 1) * moviesPerPage >= actorMovies.length ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-400'}`}
+                            className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-300 transition font-semibold back-to-cast"
+                            onClick={() => {
+                              setSelectedActor(null);
+                              setActorMovies([]);
+                            }}
+                          >
+                            &larr; Back to Cast
+                          </button>
+                          <button
+                            className={`px-4 py-2 rounded bg-gray-300 text-black font-semibold transition-all duration-200 next-page-btn ${(actorMoviesPage + 1) * moviesPerPage >= filteredActorMovies.length ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-400'}`}
                             onClick={() => setActorMoviesPage(actorMoviesPage + 1)}
-                            disabled={(actorMoviesPage + 1) * moviesPerPage >= actorMovies.length}
+                            disabled={(actorMoviesPage + 1) * moviesPerPage >= filteredActorMovies.length}
                           >
                             Next
                           </button>
@@ -186,7 +207,7 @@ const GameStartedPage = () => {
                   )}
                 </>
               ) : cast.length > 0 ? (
-                <ul className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-y-1 md:gap-2">
+                <ul className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-y-1 md:gap-2">
                   {cast.slice(0, 12).map((actor) => (
                     <li
                       key={actor.cast_id}
@@ -200,7 +221,7 @@ const GameStartedPage = () => {
                         <img
                           src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`}
                           alt={actor.name}
-                          className="w-[73px] md:w-[150px] border-2 border-white/30"
+                          className="w-[73px] md:w-[150px] border-2 border-white/60"
                         />
                       )}
                     </li>
@@ -216,8 +237,12 @@ const GameStartedPage = () => {
         {gameFinished && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-10">
             <div className="flex flex-col items-center justify-center bg-white rounded-2xl shadow-2xl p-10 max-w-md w-full">
-              <h2 className="text-2xl md:text-4xl font-bold text-green-600 mb-4">🎉 You Win! 🎉</h2>
-              <p className="text-lg md:text-xl text-black mb-2">You took {steps + 1} mov(ies)!</p>
+              <h2 className="text-2xl md:text-4xl font-bold mb-4" style={{ color: gaveUp ? '#dc2626' : '#16a34a' }}>
+                {gaveUp ? "You gave up :(" : "🎉 You Win! 🎉"}
+              </h2>
+              <p className="text-lg md:text-xl text-black mb-2">
+                {gaveUp ? "Get back in the lab lil bud." : `You took ${steps + 1} mov(ies)!`}
+              </p>
               <img
                 src={`https://image.tmdb.org/t/p/w500${endMovie.poster_path}`}
                 alt={endMovie.title}
@@ -240,12 +265,14 @@ const GameStartedPage = () => {
         )}
 
         {!gameFinished && (
-          // Stuck? Restart Button
           <button
-            className="mb-4 px-4 py-2 bg-red-500/10 text-white rounded hover:bg-red-400 transition font-bold self-center mt-5"
-            onClick={handleRestart}
+            className="mb-4 px-4 py-2 bg-red-500/10 text-white rounded hover:bg-red-400 transition font-bold self-center mt-5 giveup"
+            onClick={() => {
+              setGameFinished(true);
+              setGaveUp(true); // <-- Set gaveUp to true
+            }}
           >
-            Stuck? Restart from Beginning
+            Give Up?
           </button>
         )}
       </div>

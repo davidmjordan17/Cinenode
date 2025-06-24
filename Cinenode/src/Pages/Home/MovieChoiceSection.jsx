@@ -117,7 +117,7 @@ const MovieChoiceSection = () => {
 
       {/* Search UI for either start or end movie */}
       {searchingFor && (
-        <div className="flex flex-col bg-black/50 absolute top-65 md:top-75 p-4 md:p-10 rounded w-xs md:w-2xl backdrop-blur-3xl opacity-100 visible transition-all duration-300">
+        <div className="flex flex-col bg-black/50 absolute top-45 md:top-75 p-4 md:p-10 rounded w-xs md:w-2xl backdrop-blur-3xl opacity-100 visible transition-all duration-300">
           <form className='flex gap-10 items-center justify-center' onSubmit={handleSearch}>
             <input
               type="text"
