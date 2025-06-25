@@ -1,5 +1,5 @@
 # Cinenode! (Sin-uh-node) 
-This web applicatio will put your film knowledge to the test! 🎥
+This web application will put your film knowledge to the test! 🎥
 
 ### How to play
 1: Pick a starting movie <br>
