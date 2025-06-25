@@ -3,6 +3,8 @@ import { ArrowRight} from 'lucide-react';
 import { Link } from "react-router-dom";
 import { useMovieContext } from '../../App';
 
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
 const MovieChoiceSection = () => {
   const [startMovie, setStartMovie] = useState(null);
   const [endMovie, setEndMovie] = useState(null);
@@ -18,7 +20,7 @@ const MovieChoiceSection = () => {
     if (!searchTerm) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/search?query=${encodeURIComponent(searchTerm)}`);
+      const res = await fetch(`${BASE_URL}/api/search?query=${encodeURIComponent(searchTerm)}`);
       if (!res.ok) throw new Error(`Error: ${res.status}`);
       const data = await res.json();
       setResults(data.results);

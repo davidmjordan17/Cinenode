@@ -3,6 +3,8 @@ import { useMovieContext } from '../../App';
 import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
 const GameStartedPage = () => {
   const navigate = useNavigate();
   const { startMovie, endMovie, setStartMovie, setEndMovie } = useMovieContext();
@@ -20,6 +22,7 @@ const GameStartedPage = () => {
   const [endMovieCast, setEndMovieCast] = useState([]);
   const [loadingEndCast, setLoadingEndCast] = useState(false);
   const moviesPerPage = 12;
+  
 
   // Redirect if movies are not selected
   useEffect(() => {
@@ -35,7 +38,7 @@ const GameStartedPage = () => {
     const fetchCast = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/movie-credits?movieId=${currentMovie.id}`);
+        const res = await fetch(`${BASE_URL}/api/movie-credits?movieId=${currentMovie.id}`)
         if (!res.ok) throw new Error(`Error: ${res.status}`);
         const data = await res.json();
         setCast(data.cast || []);
@@ -57,7 +60,7 @@ const GameStartedPage = () => {
     const fetchActorMovies = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/person-movie-credits?personId=${selectedActor.id}`);
+        const res = await fetch(`${BASE_URL}/api/person-movie-credits?personId=${selectedActor.id}`);
         if (!res.ok) throw new Error(`Error: ${res.status}`);
         const data = await res.json();
         setActorMovies(data.cast || []);
@@ -76,7 +79,7 @@ const GameStartedPage = () => {
   useEffect(() => {
     if (showEndMovieCast && endMovie) {
       setLoadingEndCast(true);
-      fetch(`http://localhost:5000/api/movie-credits?movieId=${endMovie.id}`)
+      fetch(`${BASE_URL}/api/movie-credits?movieId=${endMovie.id}`)
         .then(res => res.json())
         .then(data => setEndMovieCast(data.cast || []))
         .catch(() => setEndMovieCast([]))
