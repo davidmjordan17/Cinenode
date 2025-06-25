@@ -16,6 +16,9 @@ const GameStartedPage = () => {
   const [gameFinished, setGameFinished] = useState(false);
   const [gaveUp, setGaveUp] = useState(false); // <-- Add this line
   const [actorMovieSearch, setActorMovieSearch] = useState('');
+  const [showEndMovieCast, setShowEndMovieCast] = useState(false);
+  const [endMovieCast, setEndMovieCast] = useState([]);
+  const [loadingEndCast, setLoadingEndCast] = useState(false);
   const moviesPerPage = 12;
 
   // Redirect if movies are not selected
@@ -69,6 +72,18 @@ const GameStartedPage = () => {
     fetchActorMovies();
   }, [selectedActor]);
 
+  // Fetch end movie cast when modal is opened
+  useEffect(() => {
+    if (showEndMovieCast && endMovie) {
+      setLoadingEndCast(true);
+      fetch(`http://localhost:5000/api/movie-credits?movieId=${endMovie.id}`)
+        .then(res => res.json())
+        .then(data => setEndMovieCast(data.cast || []))
+        .catch(() => setEndMovieCast([]))
+        .finally(() => setLoadingEndCast(false));
+    }
+  }, [showEndMovieCast, endMovie]);
+
   const filteredActorMovies = actorMovies.filter(movie =>
     movie.title.toLowerCase().includes(actorMovieSearch.toLowerCase())
   );
@@ -114,8 +129,9 @@ const GameStartedPage = () => {
           <img
             src={`https://image.tmdb.org/t/p/w500${endMovie.poster_path}`}
             alt={endMovie.title}
-            className="w-[100px] md:w-[200px] lg:w-[300px] rounded-lg -mt-60 md:-mt-90 lg:-mt-110 mb-5 shadow-sm"
-            title="Click to change movie"
+            className="w-[100px] md:w-[200px] lg:w-[300px] rounded-lg -mt-60 md:-mt-90 lg:-mt-110 mb-5 shadow-sm cursor-pointer"
+            title="Click to view end movie cast"
+            onClick={() => setShowEndMovieCast(true)}
           />
         </div>
 
@@ -276,6 +292,42 @@ const GameStartedPage = () => {
           </button>
         )}
       </div>
+
+      {/* End Movie Cast Modal */}
+      {showEndMovieCast && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full flex flex-col items-center relative">
+            <button
+              className="absolute top-3 right-3 text-black text-2xl font-bold hover:text-red-600"
+              onClick={() => setShowEndMovieCast(false)}
+              aria-label="Close"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-bold mb-4 text-center">{endMovie.title} Cast</h2>
+            {loadingEndCast ? (
+              <div>Loading...</div>
+            ) : endMovieCast.length > 0 ? (
+              <ul className="grid grid-cols-3 md:grid-cols-4 gap-3">
+                {endMovieCast.slice(0, 12).map(actor => (
+                  <li key={actor.cast_id} className="flex flex-col items-center">
+                    {actor.profile_path && (
+                      <img
+                        src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`}
+                        alt={actor.name}
+                        className="w-[70px] md:w-[120px] rounded mb-1"
+                      />
+                    )}
+                    <span className="text-xs text-center">{actor.name}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div>No cast found.</div>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 };
